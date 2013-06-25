@@ -1,5 +1,5 @@
 class Cookie
-  attr_reader :type
+  attr_reader :type, :time_baked
 
   def initialize(type)
     @type = type
@@ -13,13 +13,13 @@ class Cookie
 
   def status
     case
-    when @time_baked < 7
+    when time_baked < 7
       :doughy
-    when @time_baked < 10
+    when time_baked < 10
       :almost_ready
-    when @time_baked < 12
+    when time_baked < 12
       :ready
-    when @time_baked >= 12
+    when time_baked >= 12
       :burned
     else
       raise "Cookie does not have a status"
