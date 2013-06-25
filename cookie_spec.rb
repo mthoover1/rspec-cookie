@@ -59,25 +59,27 @@ describe Cookie do
 
     context "when baked for less than 7 minutes" do
       it "is `:doughy`" do
-        cookie.bake!(6).status.should eq :doughy
+        cookie.instance_variable_set("@time_baked", 6)
+        cookie.status.should eq :doughy
       end
     end  
 
     context "when baked for at least 7 but less than 10 minutes" do
       it "is `:almost_ready`" do
-        expect { cookie.bake!(8) }.to change(cookie, :status).to :almost_ready
+        cookie.instance_variable_set("@time_baked", 8)
+        cookie.status.should eq :almost_ready
       end
     end
 
     context "when baked for at least 10 but less than 12 minutes" do
       it "is `:ready`" do
-        expect { cookie.bake!(11) }.to change(cookie, :status).to :ready
+        expect { cookie.instance_variable_set("@time_baked", 11) }.to change(cookie, :status).to :ready
       end
     end
 
     context "when baked for at least 12 minutes" do
       it "is `:burned`" do
-        expect { cookie.bake!(12) }.to change(cookie, :status).to :burned
+        expect { cookie.instance_variable_set("@time_baked", 12) }.to change(cookie, :status).to :burned
       end
     end
   end
