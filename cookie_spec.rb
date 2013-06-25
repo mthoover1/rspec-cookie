@@ -22,13 +22,27 @@ describe Cookie do
   end
 
   describe "#type" do
-    it "returns the type of the cookie"
+    it "returns the type of the cookie" do
+      cookie.type.should eq(type)
+    end
   end
 
   describe "#bake!" do
-    it "requires an integer time argument"
+    it "requires an integer time argument" do
+      expect { 
+        cookie.bake!('a')
+      }.to raise_error(TypeError)
+    end
 
-    it "returns the cookie object"
+    it "requires an argument" do
+      expect {
+        cookie.bake!
+      }.to raise_error(ArgumentError)
+    end
+
+    it "returns the cookie object" do
+      cookie.bake!(10).should eq cookie
+    end
 
     it "changes the status of the cookie when given enough time" do
       expect { cookie.bake!(10) }.to change(cookie, :status)
@@ -36,26 +50,40 @@ describe Cookie do
   end
 
   describe "#status" do
-    it "returns the cookie's current status"
+    it "returns the cookie's current status" do
+      cookie.status.should eq :doughy
+    end
 
     context "when unbaked" do
-      it "is `:doughy`" 
+      it "is `:doughy`" do 
+        cookie.status.should eq :doughy
+      end
     end
 
     context "when baked for less than 7 minutes" do
-      it "is `:doughy`"
+      it "is `:doughy`" do
+        cookie.stub(:time_baked => 6)
+        cookie.status.should eq :doughy
+      end
     end  
 
     context "when baked for at least 7 but less than 10 minutes" do
-      it "is `:almost_ready`"
+      it "is `:almost_ready`" do
+        cookie.stub(:time_baked => 8)
+        cookie.status.should eq :almost_ready
+      end
     end
 
     context "when baked for at least 10 but less than 12 minutes" do
-      it "is `:ready`"
+      it "is `:ready`" do
+        expect { cookie.stub(:time_baked => 11) }.to change(cookie, :status).to :ready
+      end
     end
 
     context "when baked for at least 12 minutes" do
-      it "is `:burned`"
+      it "is `:burned`" do
+        expect { cookie.stub(:time_baked => 12) }.to change(cookie, :status).to :burned
+      end
     end
   end
 end
